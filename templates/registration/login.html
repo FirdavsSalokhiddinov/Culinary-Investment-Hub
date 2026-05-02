@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Log In | Culinary Investment Hub{% endblock %}
+
+{% block content %}
+<section class="form-shell narrow-shell">
+    <div class="form-intro">
+        <p class="eyebrow">Account access</p>
+        <h1>Log in to post or manage opportunities</h1>
+        <p>The homepage and public listings stay open to everyone. Logging in is only required when you want to publish or edit a listing.</p>
+    </div>
+    <form class="form-card auth-card" method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="form-errors">Your username or password did not match. Please try again.</div>
+        {% endif %}
+        <div class="field-row">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+        </div>
+        <div class="field-row">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="form-actions">
+            <button class="button-primary" type="submit">Log in</button>
+            <a class="button-secondary" href="{% url 'signup' %}">Create account</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

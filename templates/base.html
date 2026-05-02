@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Culinary Investment Hub{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+    <div class="site-bg"></div>
+    <header class="site-header">
+        <nav class="nav-shell">
+            <a class="brand-mark" href="{% url 'home' %}">
+                <span class="brand-kicker">Capital for kitchens</span>
+                <span class="brand-name">Culinary Investment Hub</span>
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}#opportunities">Browse Deals</a>
+                <a href="{% url 'listing_create' %}">Post Opportunity</a>
+                {% if user.is_authenticated %}
+                    <span class="nav-user">Hi, {{ user.username }}</span>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="nav-button nav-button-light" type="submit">Log out</button>
+                    </form>
+                {% else %}
+                    <a class="nav-button nav-button-light" href="{% url 'login' %}">Log in</a>
+                    <a class="nav-button" href="{% url 'signup' %}">Create account</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    {% if messages %}
+        <div class="messages-wrap">
+            {% for message in messages %}
+                <div class="message-chip">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

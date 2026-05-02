@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Logged Out | Culinary Investment Hub{% endblock %}
+
+{% block content %}
+<section class="form-shell narrow-shell">
+    <div class="form-intro">
+        <p class="eyebrow">Signed out</p>
+        <h1>You have been logged out.</h1>
+        <p>You can still browse all restaurant and culinary opportunities from the homepage.</p>
+    </div>
+    <div class="form-card">
+        <div class="form-actions">
+            <a class="button-primary" href="{% url 'home' %}">Return home</a>
+            <a class="button-secondary" href="{% url 'login' %}">Log back in</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

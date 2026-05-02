@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit Listing{% else %}Post Opportunity{% endif %} | Culinary Investment Hub{% endblock %}
+
+{% block content %}
+<section class="form-shell">
+    <div class="form-intro">
+        <p class="eyebrow">Founder workspace</p>
+        <h1>{% if form.instance.pk %}Update your investment listing{% else %}Post a restaurant or culinary investment opportunity{% endif %}</h1>
+        <p>
+            Describe the business clearly, share how much investment you want, and explain how the funding will help you grow.
+            Investors can view this page without logging in.
+        </p>
+    </div>
+
+    <form class="form-card" method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="form-errors">Please fix the highlighted fields below.</div>
+        {% endif %}
+        {% for field in form %}
+            <div class="field-row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button class="button-primary" type="submit">{% if form.instance.pk %}Save changes{% else %}Publish listing{% endif %}</button>
+            <a class="button-secondary" href="{% if form.instance.pk %}{{ form.instance.get_absolute_url }}{% else %}{% url 'home' %}{% endif %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

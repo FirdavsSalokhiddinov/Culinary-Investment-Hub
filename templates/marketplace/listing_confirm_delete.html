@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ object.restaurant_name }} | Culinary Investment Hub{% endblock %}
+
+{% block content %}
+<section class="form-shell narrow-shell">
+    <div class="form-intro">
+        <p class="eyebrow">Remove listing</p>
+        <h1>Delete {{ object.restaurant_name }}?</h1>
+        <p>This will remove the public investment opportunity from the marketplace.</p>
+    </div>
+    <form class="form-card" method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button class="button-danger" type="submit">Yes, delete it</button>
+            <a class="button-secondary" href="{{ object.get_absolute_url }}">Keep listing</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}{{ listing.restaurant_name }} | Culinary Investment Hub{% endblock %}
+
+{% block content %}
+<section class="detail-hero">
+    <div class="detail-copy">
+        <p class="eyebrow">{{ listing.get_business_type_display }} in {{ listing.location }}</p>
+        <h1>{{ listing.restaurant_name }}</h1>
+        <p class="hero-text">{{ listing.summary }}</p>
+        <div class="detail-actions">
+            <a class="button-primary" href="{% url 'home' %}#opportunities">Back to opportunities</a>
+            {% if user == listing.owner %}
+                <a class="button-secondary" href="{% url 'listing_update' listing.slug %}">Edit listing</a>
+            {% endif %}
+        </div>
+    </div>
+    <aside class="detail-sidebar">
+        <div class="detail-stat">
+            <span>Funding goal</span>
+            <strong>${{ listing.funding_goal|floatformat:0|intcomma }}</strong>
+        </div>
+        <div class="detail-stat">
+            <span>Equity offered</span>
+            <strong>
+                {% if listing.equity_offer %}
+                    {{ listing.equity_offer|floatformat:2 }}%
+                {% else %}
+                    Flexible
+                {% endif %}
+            </strong>
+        </div>
+        <div class="detail-stat">
+            <span>Target timeline</span>
+            <strong>{{ listing.target_timeline }}</strong>
+        </div>
+        {% if listing.website %}
+            <a class="text-link" href="{{ listing.website }}" target="_blank" rel="noopener noreferrer">Visit business website</a>
+        {% endif %}
+    </aside>
+</section>
+
+<section class="detail-grid">
+    <article class="detail-panel">
+        <h2>The story</h2>
+        <p>{{ listing.story|linebreaks }}</p>
+    </article>
+    <article class="detail-panel">
+        <h2>How the investment will be used</h2>
+        <p>{{ listing.use_of_funds|linebreaks }}</p>
+    </article>
+    <article class="detail-panel">
+        <h2>Listing details</h2>
+        <dl class="facts-list">
+            <div>
+                <dt>Posted by</dt>
+                <dd>{{ listing.owner.username }}</dd>
+            </div>
+            <div>
+                <dt>Business type</dt>
+                <dd>{{ listing.get_business_type_display }}</dd>
+            </div>
+            <div>
+                <dt>Location</dt>
+                <dd>{{ listing.location }}</dd>
+            </div>
+            <div>
+                <dt>Published</dt>
+                <dd>{{ listing.created_at|date:"F j, Y" }}</dd>
+            </div>
+        </dl>
+        {% if user == listing.owner %}
+            <div class="owner-actions">
+                <a class="button-secondary" href="{% url 'listing_update' listing.slug %}">Update</a>
+                <a class="button-danger" href="{% url 'listing_delete' listing.slug %}">Delete</a>
+            </div>
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

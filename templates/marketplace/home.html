@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Culinary Investment Hub{% endblock %}
+
+{% block content %}
+<section class="hero-shell">
+    <div class="hero-copy">
+        <p class="eyebrow">Public marketplace for restaurants and culinary ventures</p>
+        <h1>Help ambitious food businesses meet the investors ready to back them.</h1>
+        <p class="hero-text">
+            Culinary Investment Hub connects restaurant founders, chefs, bakers, caterers, and food truck owners with people who want to fund standout hospitality ideas.
+            Anyone can browse the marketplace. Logged-in founders can publish their funding ask in minutes.
+        </p>
+        <div class="hero-actions">
+            <a class="button-primary" href="#opportunities">Explore opportunities</a>
+            <a class="button-secondary" href="{% url 'listing_create' %}">Post your funding need</a>
+        </div>
+        <form class="search-panel" method="get">
+            <label class="search-label" for="id_q">Search by restaurant, city, or story</label>
+            <div class="search-row">
+                <input id="id_q" name="q" type="search" value="{{ search_term }}" placeholder="Try Chicago, bakery, tasting menu, food truck...">
+                <button type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="hero-feature">
+        <img src="{% static 'images/restaurant1.jpg' %}" alt="Restaurant dining room">
+        <div class="feature-card">
+            <span class="feature-label">Marketplace snapshot</span>
+            <h2>{{ stats.listing_count }} live opportunities</h2>
+            <p>${{ stats.capital_requested|floatformat:0|intcomma }} currently requested across the platform.</p>
+            {% if featured_listing %}
+                <div class="feature-listing">
+                    <strong>{{ featured_listing.restaurant_name }}</strong>
+                    <span>{{ featured_listing.get_business_type_display }} in {{ featured_listing.location }}</span>
+                    <span>Seeking ${{ featured_listing.funding_goal|floatformat:0|intcomma }}</span>
+                </div>
+            {% else %}
+                <div class="feature-listing">
+                    <strong>Be the first founder to post.</strong>
+                    <span>Publish your story, funding goal, and timeline for investors to review.</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="info-strip">
+    <article>
+        <span>For founders</span>
+        <p>Share your concept, funding goal, timeline, and how you will use the capital.</p>
+    </article>
+    <article>
+        <span>For investors</span>
+        <p>Browse public opportunities without creating an account and discover culinary businesses with traction.</p>
+    </article>
+    <article>
+        <span>For both sides</span>
+        <p>Use the detail pages to understand each venture before starting direct conversations off-platform.</p>
+    </article>
+</section>
+
+<section class="section-shell" id="opportunities">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Investment opportunities</p>
+            <h2>Restaurants and culinary brands raising capital</h2>
+            {% if search_term %}
+                <p class="hero-text">Showing {{ search_count }} result{{ search_count|pluralize }} for "{{ search_term }}".</p>
+            {% endif %}
+        </div>
+        <a class="text-link" href="{% url 'listing_create' %}">Need funding? Post your opportunity.</a>
+    </div>
+
+    {% if listings %}
+        <div class="listing-grid">
+            {% for listing in listings %}
+                <article class="listing-card">
+                    <div class="listing-topline">
+                        <span>{{ listing.get_business_type_display }}</span>
+                        <span>{{ listing.location }}</span>
+                    </div>
+                    <h3><a href="{% url 'listing_detail' listing.slug %}">{{ listing.restaurant_name }}</a></h3>
+                    <p>{{ listing.summary }}</p>
+                    <dl class="listing-metrics">
+                        <div>
+                            <dt>Seeking</dt>
+                            <dd>${{ listing.funding_goal|floatformat:0|intcomma }}</dd>
+                        </div>
+                        <div>
+                            <dt>Equity</dt>
+                            <dd>
+                                {% if listing.equity_offer %}
+                                    {{ listing.equity_offer|floatformat:2 }}%
+                                {% else %}
+                                    Flexible
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Timeline</dt>
+                            <dd>{{ listing.target_timeline }}</dd>
+                        </div>
+                    </dl>
+                    <a class="card-link" href="{% url 'listing_detail' listing.slug %}">View full pitch</a>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>No opportunities match that search yet.</h3>
+            <p>Clear the search or create the first listing for your restaurant or culinary business.</p>
+            <a class="button-primary" href="{% url 'listing_create' %}">Post an opportunity</a>
+        </div>
+    {% endif %}
+</section>
+
+<section class="section-shell story-band">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">How it works</p>
+            <h2>A simple path from kitchen vision to investor attention</h2>
+        </div>
+    </div>
+    <div class="steps-grid">
+        <article>
+            <span>01</span>
+            <h3>Create an account</h3>
+            <p>Founders sign up once so their opportunity is tied to an owner account.</p>
+        </article>
+        <article>
+            <span>02</span>
+            <h3>Post the ask</h3>
+            <p>Add the funding amount, business story, timeline, and how the capital will be used.</p>
+        </article>
+        <article>
+            <span>03</span>
+            <h3>Get discovered</h3>
+            <p>Investors can browse every public listing from the homepage and open each pitch for more detail.</p>
+        </article>
+    </div>
+</section>
+{% endblock %}
